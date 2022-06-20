@@ -9,8 +9,8 @@ export default class extends BaseSchema {
       table.text("title").notNullable();
       table.text("info", "longtext").notNullable();
       table.text("place").notNullable();
-      table.dateTime("startDate").notNullable();
-      table.dateTime("endDate").notNullable();
+      table.dateTime("start_date").notNullable();
+      table.dateTime("end_date").notNullable();
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
        */
