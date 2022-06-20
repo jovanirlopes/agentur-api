@@ -17,9 +17,10 @@
 | import './routes/customer'
 |
 */
-import './routes/users'
-import Route from '@ioc:Adonis/Core/Route'
 
-Route.get('/', async () => {
-  return { hello: 'world' }
-})
+import Route from "@ioc:Adonis/Core/Route";
+
+Route.group(() => {
+  Route.post("/auth", "UsersController.auth");
+  Route.post("/register", "UsersController.register");
+}).prefix("/users");
