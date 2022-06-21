@@ -12,7 +12,7 @@ export default class EventsController {
         return events;
       } else {
         const events = await Event.query()
-          .where("title", "IN", search)
+          .where("title", "like", search)
           .paginate(page);
         return events;
       }
