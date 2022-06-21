@@ -4,15 +4,16 @@ import Event from "App/Models/Event";
 
 export default class EventsController {
   public async index({ response, request }) {
-    const page = request.get().page || 1;
-    const search = request.get().search || null;
+    const page = request.qs().page || 1;
+    const search = request.qs().search || null;
     try {
       if (search === null) {
         const events = await Event.query().paginate(page);
         return events;
       } else {
         const events = await Event.query()
-          .where("title", "like", search)
+          .whereILike("title", "%" + search + "%")
+          .orWhereILike("info", "%" + search + "%")
           .paginate(page);
         return events;
       }
