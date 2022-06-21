@@ -21,6 +21,6 @@
 import Route from "@ioc:Adonis/Core/Route";
 
 Route.group(() => {
-  Route.post("/auth", "UsersController.auth");
+  Route.post("/", "EventsController.store");
   Route.post("/register", "UsersController.register");
 }).prefix("/events");

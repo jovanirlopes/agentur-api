@@ -17,9 +17,10 @@
 | import './routes/customer'
 |
 */
-import './routes/users'
-import Route from '@ioc:Adonis/Core/Route'
+import "./routes/users";
+import "./routes/events";
+import Route from "@ioc:Adonis/Core/Route";
 
-Route.get('/', async () => {
-  return { hello: 'world' }
-})
+Route.get("/", async () => {
+  return { hello: "world" };
+});
