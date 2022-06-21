@@ -3,12 +3,24 @@
 import Event from "App/Models/Event";
 
 export default class EventsController {
-  public async index({ response }) {
+  public async index({ response, request }) {
+    const page = request.get().page || 1;
+    const search = request.get().search || null;
     try {
-      const events = await Event.all();
-      return events;
+      if (search === null) {
+        const events = await Event.query().paginate(page);
+        return events;
+      } else {
+        const events = await Event.query()
+          .where("title", "IN", search)
+          .paginate(page);
+        return events;
+      }
     } catch (error) {
-      response.badRequest({ message: "Falha ao listar eventos", error: error });
+      return response.badRequest({
+        message: "Falha ao listar eventos",
+        error: error,
+      });
     }
   }
 
@@ -17,7 +29,35 @@ export default class EventsController {
       const event = await Event.create(request.all());
       return event;
     } catch (error) {
-      response.badRequest({ message: "Falha ao incluir evento", error: error });
+      return response.badRequest({
+        message: "Falha ao incluir evento",
+        error: error,
+      });
+    }
+  }
+
+  public async find({ response, params }) {
+    try {
+      const event = Event.findOrFail(params.id);
+      return event;
+    } catch (error) {
+      return response.badRequest({
+        message: "Falha ao buscar evento",
+        error: error,
+      });
+    }
+  }
+
+  public async delete({ response, params }) {
+    try {
+      const event = await Event.findOrFail(params.id);
+      event.delete();
+      return;
+    } catch (error) {
+      return response.badRequest({
+        message: "Falha ao deletare vento",
+        error: error,
+      });
     }
   }
 }

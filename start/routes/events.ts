@@ -21,6 +21,8 @@
 import Route from "@ioc:Adonis/Core/Route";
 
 Route.group(() => {
+  Route.get("/", "EventsController.index");
   Route.post("/", "EventsController.store");
-  Route.post("/register", "UsersController.register");
+  Route.get("/:id", "EventsController.find");
+  Route.delete("/:id", "EventsController.delete");
 }).prefix("/events");
