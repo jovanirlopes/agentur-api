@@ -19,7 +19,23 @@ export default class UsersController {
       const user = await User.create(request.all());
       return user;
     } catch (error) {
-      return response.badRequest({message: 'Falha ao criar usuário', detail: error})
+      return response.badRequest({
+        message: "Falha ao criar usuário",
+        detail: error,
+      });
+    }
+  }
+
+  public async update({ request, params, response }) {
+    try {
+      const user = await User.findOrFail(params.id);
+      await user.merge(request.all()).save();
+      return user;
+    } catch (error) {
+      response.badRequest({
+        message: "Falha ao alterar usuário",
+        error: error,
+      });
     }
   }
 }

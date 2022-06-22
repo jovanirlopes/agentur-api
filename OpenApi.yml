@@ -137,7 +137,31 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
-
+  /users/{id}:
+    put:
+      tags:
+        - users
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: number
+      requestBody:
+        description: Dados do usuário
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        '200':
+          description: Alterado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
   /users/auth:
     post:
       tags:
