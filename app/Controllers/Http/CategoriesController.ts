@@ -56,4 +56,17 @@ export default class CategoriesController {
       return category;
     }
   }
+
+  public async update({ response, request, params }) {
+    try {
+      const category = await Category.findOrFail(params.id);
+      await category.merge(request.all()).save();
+      return category;
+    } catch (error) {
+      return response.badRequest({
+        message: "Falha ao editar categoria",
+        error: error,
+      });
+    }
+  }
 }
