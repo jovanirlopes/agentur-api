@@ -21,6 +21,9 @@ export default class Event extends BaseModel {
   @column()
   public endDate: DateTime;
 
+  @column()
+  protected categoryId: number;
+
   @belongsTo(() => Category)
   public category: BelongsTo<typeof Category>;
 

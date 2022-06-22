@@ -5,7 +5,7 @@ export default class extends BaseSchema {
 
   public async up () {
     this.schema.alterTable(this.tableName, (table) => {
-      table.integer("cetegory_id").unsigned().references("categories.id");
+      table.integer("category_id").unsigned().references("categories.id");
     })
   }
 }
