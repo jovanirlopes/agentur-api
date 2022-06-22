@@ -24,5 +24,5 @@ import "./routes/categories";
 import Route from "@ioc:Adonis/Core/Route";
 
 Route.get("/", async () => {
-  return { hello: "world" };
+  return { API: "Agentur", Version: "1.2.7" };
 });
