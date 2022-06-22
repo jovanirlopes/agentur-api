@@ -108,13 +108,20 @@ paths:
         - "users"
       security:
         - bearerAuth: []
+      requestBody:
+        description: Dados do usuário
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
       responses:
         '200':
-          description: Adiciona um usuário
+          description: Adicionado um usuário
           content:
             application/json:
               schema:
-                type: array
+                $ref: "#/components/schemas/User"
 
   /users/auth:
     post:
