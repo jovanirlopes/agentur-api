@@ -3,26 +3,36 @@
 import Event from "App/Models/Event";
 
 export default class EventsController {
+  public page: number;
+  public searchFiel: string | null;
+
   public async index({ response, request }) {
-    const page = request.qs().page || 1;
-    const search = request.qs().search || null;
+    this.page = request.qs().page || 1;
+    this.searchFiel = request.qs().search || null;
     try {
-      if (search === null) {
-        const events = await Event.query().preload("category").paginate(page);
-        return events;
-      } else {
-        const events = await Event.query()
-          .whereILike("title", "%" + search + "%")
-          .orWhereILike("info", "%" + search + "%")
-          .preload("category")
-          .paginate(page);
-        return events;
-      }
+      const result = await this.search();
+      return result;
     } catch (error) {
       return response.badRequest({
         message: "Falha ao listar eventos",
         error: error.message,
       });
+    }
+  }
+
+  public async search() {
+    if (this.searchFiel === null) {
+      const events = await Event.query()
+        .preload("category")
+        .paginate(this.page);
+      return events;
+    } else {
+      const events = await Event.query()
+        .whereILike("title", "%" + this.searchFiel + "%")
+        .orWhereILike("info", "%" + this.searchFiel + "%")
+        .preload("category")
+        .paginate(this.page);
+      return events;
     }
   }
 
@@ -60,6 +70,16 @@ export default class EventsController {
         message: "Falha ao deletare vento",
         error: error,
       });
+    }
+  }
+
+  public async update({ response, request, params }) {
+    try {
+      const event = await Event.findOrFail(params.id);
+      await event.merge(request.all()).save();
+      return event;
+    } catch (error) {
+      response.badRequest({ message: "Falha ao alterar evento", error: error });
     }
   }
 }
