@@ -8,19 +8,20 @@ export default class EventsController {
     const search = request.qs().search || null;
     try {
       if (search === null) {
-        const events = await Event.query().paginate(page);
+        const events = await Event.query().preload("category").paginate(page);
         return events;
       } else {
         const events = await Event.query()
           .whereILike("title", "%" + search + "%")
           .orWhereILike("info", "%" + search + "%")
+          .preload("category")
           .paginate(page);
         return events;
       }
     } catch (error) {
       return response.badRequest({
         message: "Falha ao listar eventos",
-        error: error,
+        error: error.message,
       });
     }
   }
