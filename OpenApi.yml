@@ -47,6 +47,11 @@ components:
         endDate:
           type: string
           format: date-time
+    Categories:
+      type: object
+      properties:
+        category:
+          type: string
   securitySchemes:
     bearerAuth:            # arbitrary name for the security scheme
       type: http
@@ -61,6 +66,17 @@ paths:
     get:
       tags:
         - "events"
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: string
+          description: Pagina que deseja consultar
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Pagina que deseja consultar
       responses:
         '200':
           description: Retorna lista de eventos.
@@ -101,7 +117,6 @@ paths:
       responses:
         '200':
           description: Deletado com sucesso
-
   /users:
     post:
       tags:
@@ -126,9 +141,9 @@ paths:
   /users/auth:
     post:
       tags:
-        - "users"
+        - users
       requestBody:
-        description: Optional description in *Markdown*
+        description: Faz a autenticação do usuário
         required: true
         content:
           application/json:
@@ -141,6 +156,48 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SucessLogin"
-
-
-
+  /categories:
+    post:
+      tags:
+        - categories
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Adiciona uma nova categoria
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Categories"
+      responses:
+        '200':
+          description: Retorna a categoria adicionada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Categories"
+    get:
+      tags:
+        - categories
+      responses:
+        '200':
+          description: Retorna a lista de categorias
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Categories"
+  /categories/{id}:
+    delete:
+      tags:
+        - categories
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Id do evento que deseja deletar
+      responses:
+        '200':
+          description: Deletado com sucesso

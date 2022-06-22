@@ -1,15 +1,13 @@
 // import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 import Category from "App/Models/Category";
-import Event from "App/Models/Event";
 
 export default class CategoriesController {
   public async index({ response, request }) {
+    const page = request.qs().page || 1;
+    const search = request.qs().search || null;
     try {
-      const result = await this.search(
-        request.qs().search,
-        request.qs().page || 0
-      );
+      const result = await this.search(search, page);
       return result;
     } catch (error) {
       response.badRequest({
@@ -21,18 +19,31 @@ export default class CategoriesController {
 
   public async store({ response, request }) {
     try {
-      const category = await Event.create(request.all());
+      const category = await Category.create(request.all());
       return category;
     } catch (error) {
       response.badRequest({
         message: "Falha ao inserir categoria",
-        originalMessage: error.message,
+        originalMessage: error,
+      });
+    }
+  }
+
+  public async delete({ response, params }) {
+    try {
+      const category = await Category.findOrFail(params.id);
+      await category.delete();
+      return { message: "deletado com sucesso.", category };
+    } catch (error) {
+      return response.badRequest({
+        message: "Falha ao deletar catgegoria",
+        Detail: error,
       });
     }
   }
 
   private async search(search, page) {
-    if (search) {
+    if (search === null) {
       const category = await Category.query().paginate(page);
       return category;
     } else {

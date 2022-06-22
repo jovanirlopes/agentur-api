@@ -19,6 +19,8 @@
 */
 import "./routes/users";
 import "./routes/events";
+import "./routes/categories";
+
 import Route from "@ioc:Adonis/Core/Route";
 
 Route.get("/", async () => {
