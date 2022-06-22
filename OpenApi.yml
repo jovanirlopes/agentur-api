@@ -148,6 +148,7 @@ paths:
           name: id
           schema:
             type: number
+          required: true
       requestBody:
         description: Dados do usuário
         required: true
