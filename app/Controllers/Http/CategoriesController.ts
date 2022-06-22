@@ -3,11 +3,14 @@
 import Category from "App/Models/Category";
 
 export default class CategoriesController {
+  public page: number;
+  public searchField: string | null;
+
   public async index({ response, request }) {
-    const page = request.qs().page || 1;
-    const search = request.qs().search || null;
+    this.page = request.qs().page || 1;
+    this.searchField = request.qs().search || null;
     try {
-      const result = await this.search(search, page);
+      const result = await this.search();
       return result;
     } catch (error) {
       response.badRequest({
@@ -42,14 +45,14 @@ export default class CategoriesController {
     }
   }
 
-  private async search(search, page) {
-    if (search === null) {
-      const category = await Category.query().paginate(page);
+  private async search() {
+    if (this.searchField === null) {
+      const category = await Category.query().paginate(this.page);
       return category;
     } else {
       const category = await Category.query()
-        .whereILike("category", search)
-        .paginate(page);
+        .whereILike("category", this.searchField)
+        .paginate(this.page);
       return category;
     }
   }

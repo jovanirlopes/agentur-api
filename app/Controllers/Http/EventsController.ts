@@ -4,11 +4,11 @@ import Event from "App/Models/Event";
 
 export default class EventsController {
   public page: number;
-  public searchFiel: string | null;
+  public searchField: string | null;
 
   public async index({ response, request }) {
     this.page = request.qs().page || 1;
-    this.searchFiel = request.qs().search || null;
+    this.searchField = request.qs().search || null;
     try {
       const result = await this.search();
       return result;
@@ -21,15 +21,15 @@ export default class EventsController {
   }
 
   public async search() {
-    if (this.searchFiel === null) {
+    if (this.searchField === null) {
       const events = await Event.query()
         .preload("category")
         .paginate(this.page);
       return events;
     } else {
       const events = await Event.query()
-        .whereILike("title", "%" + this.searchFiel + "%")
-        .orWhereILike("info", "%" + this.searchFiel + "%")
+        .whereILike("title", "%" + this.searchField + "%")
+        .orWhereILike("info", "%" + this.searchField + "%")
         .preload("category")
         .paginate(this.page);
       return events;
@@ -79,7 +79,7 @@ export default class EventsController {
       await event.merge(request.all()).save();
       return event;
     } catch (error) {
-      response.badRequest({ message: "Falha ao alterar evento", error: error });
+      response.badRequest({message: "Falha ao alterar evento", error: error})
     }
   }
 }
