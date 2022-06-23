@@ -10,10 +10,9 @@ export default class CategoriesController {
     this.page = request.qs().page || 1;
     this.searchField = request.qs().search || null;
     try {
-      const result = await this.search();
-      return result;
+      return await this.search();
     } catch (error) {
-      response.badRequest({
+      return response.badRequest({
         message: "Falha ao listar categorias",
         error: error,
       });
@@ -22,10 +21,9 @@ export default class CategoriesController {
 
   public async store({ response, request }) {
     try {
-      const category = await Category.create(request.all());
-      return category;
+      return await Category.create(request.all());
     } catch (error) {
-      response.badRequest({
+      return response.badRequest({
         message: "Falha ao inserir categoria",
         originalMessage: error,
       });
@@ -47,13 +45,11 @@ export default class CategoriesController {
 
   private async search() {
     if (this.searchField === null) {
-      const category = await Category.query().paginate(this.page);
-      return category;
+      return await Category.query().paginate(this.page);
     } else {
-      const category = await Category.query()
+      return await Category.query()
         .whereILike("category", this.searchField)
         .paginate(this.page);
-      return category;
     }
   }
 
