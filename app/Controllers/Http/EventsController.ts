@@ -24,6 +24,7 @@ export default class EventsController {
     if (this.searchField === null) {
       const events = await Event.query()
         .preload("category")
+        .preload("status")
         .paginate(this.page);
       return events;
     } else {
@@ -31,6 +32,7 @@ export default class EventsController {
         .whereILike("title", "%" + this.searchField + "%")
         .orWhereILike("info", "%" + this.searchField + "%")
         .preload("category")
+        .preload("status")
         .paginate(this.page);
       return events;
     }
