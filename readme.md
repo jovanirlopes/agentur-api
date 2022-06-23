@@ -27,3 +27,19 @@ Para iniciar a aplicação em produção utilize o comando:
 ```
 node server.js
 ```
+
+## Rotas disponiveis
+
+### post
+
+```
+/users
+```
+Cadastrar um usuário com as seguintes informações
+```
+{
+  name: string,
+  email: string,
+  password: string
+}
+```
