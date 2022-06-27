@@ -25,6 +25,7 @@ export default class EventsController {
       const events = await Event.query()
         .preload("category")
         .preload("status")
+        .preload("photos")
         .paginate(this.page);
       return events;
     } else {
@@ -45,7 +46,7 @@ export default class EventsController {
     } catch (error) {
       return response.badRequest({
         message: "Falha ao incluir evento",
-        error: error,
+        error: error.message,
       });
     }
   }
@@ -81,7 +82,7 @@ export default class EventsController {
       await event.merge(request.all()).save();
       return event;
     } catch (error) {
-      response.badRequest({message: "Falha ao alterar evento", error: error})
+      response.badRequest({ message: "Falha ao alterar evento", error: error });
     }
   }
 }
