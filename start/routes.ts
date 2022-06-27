@@ -21,6 +21,7 @@ import "./routes/users";
 import "./routes/events";
 import "./routes/categories";
 import "./routes/statusEvent";
+import "./routes/photos";
 
 import Route from "@ioc:Adonis/Core/Route";
 

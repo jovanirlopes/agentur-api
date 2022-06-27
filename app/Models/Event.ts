@@ -1,7 +1,15 @@
 import { DateTime } from "luxon";
-import { BaseModel, BelongsTo, belongsTo, column } from "@ioc:Adonis/Lucid/Orm";
+import {
+  BaseModel,
+  BelongsTo,
+  belongsTo,
+  column,
+  HasMany,
+  hasMany,
+} from "@ioc:Adonis/Lucid/Orm";
 import Category from "./Category";
 import StatusEvent from "./StatusEvent";
+import Photo from "./Photo";
 
 export default class Event extends BaseModel {
   @column({ isPrimary: true })
@@ -36,6 +44,9 @@ export default class Event extends BaseModel {
 
   @belongsTo(() => StatusEvent)
   public status: BelongsTo<typeof StatusEvent>;
+
+  @hasMany(() => Photo)
+  public photos: HasMany<typeof Photo>;
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime;

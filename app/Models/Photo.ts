@@ -8,6 +8,9 @@ export default class Photo extends BaseModel {
   @column()
   public url: string;
 
+  @column()
+  public eventId: number;
+
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime;
 
