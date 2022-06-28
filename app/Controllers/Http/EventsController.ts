@@ -34,6 +34,7 @@ export default class EventsController {
         .orWhereILike("info", "%" + this.searchField + "%")
         .preload("category")
         .preload("status")
+        .preload("photos")
         .paginate(this.page);
       return events;
     }

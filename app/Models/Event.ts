@@ -36,9 +36,6 @@ export default class Event extends BaseModel {
   @belongsTo(() => Category)
   public category: BelongsTo<typeof Category>;
 
-  @column.dateTime({ autoCreate: true })
-  public createdAt: DateTime;
-
   @column()
   public statusEventId: number;
 
@@ -47,6 +44,9 @@ export default class Event extends BaseModel {
 
   @hasMany(() => Photo)
   public photos: HasMany<typeof Photo>;
+
+  @column.dateTime({ autoCreate: true })
+  public createdAt: DateTime;
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime;

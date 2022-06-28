@@ -1,53 +1,54 @@
 // import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { S3 } from "aws-sdk";
 import Application from "@ioc:Adonis/Core/Application";
+import Drive from "@ioc:Adonis/Core/Drive";
+import Photo from "App/Models/Photo";
 
 export default class PhotosController {
-  public storage = new S3({
-    endpoint: process.env.STORAGE_ENDPOINT,
-    accessKeyId: process.env.STORAGE_ACCESS_KEY_ID,
-    secretAccessKey: process.env.STORAGE_SECRET_ACCESS_ID,
-    s3BucketEndpoint: true,
-  });
+  public s3 = Drive.use("s3");
 
   public path = Application.tmpPath("uploads");
   public file;
+  public fileName;
 
-  public async index({ response }) {
-    try {
-      return await this.listAll();
-    } catch (error) {
-      response.badRequest(error);
-    }
-  }
-
-  public async listAll() {
-    return await this.storage.listObjects({ Bucket: "agentur" }).promise();
-  }
-
-  public async store({ request, response }) {
+  public async store({ request, response, params }) {
     try {
       this.file = request.file("photo");
-      await this.file.move(this.path);
-      return await this.s3Store();
+      await this.upload();
+      return await Photo.create({
+        fileName: this.file.fileName,
+        eventId: params.id,
+      });
     } catch (error) {
       response.badRequest(error);
     }
   }
 
-  public async s3Store() {
-    await this.storage.putObject(
+  public async upload() {
+    await this.generateRandomName();
+    await this.file.moveToDisk(
+      "./",
       {
-        Body: Buffer.from(this.file.filePath),
-        Bucket: "Agentur",
-        Key: await this.generateFIleName(),
+        name: this.fileName,
+        contentType: this.file.type + "/" + this.file.extname,
       },
-      (err) => (err ? false : true)
+      "s3"
     );
   }
 
-  public async generateFIleName() {
-    const name = await Date.now().toString();
-    return name + "." + this.file.extname;
+  public async generateRandomName() {
+    this.fileName = await (Math.random().toString(36).substring(2, 15) +
+      "-" +
+      Date.now().toString() +
+      "." +
+      this.file.extname);
+  }
+
+  public async find({ response, params }) {
+    try {
+      const photo = await Photo.findOrFail(params.id);
+      return await this.s3.getSignedUrl(photo.fileName);
+    } catch (error) {
+      response.badRequest(error.message);
+    }
   }
 }
