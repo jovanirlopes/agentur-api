@@ -1,6 +1,7 @@
 // import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Application from "@ioc:Adonis/Core/Application";
 import Drive from "@ioc:Adonis/Core/Drive";
+import Event from "App/Models/Event";
 import Photo from "App/Models/Photo";
 
 export default class PhotosController {
@@ -20,6 +21,32 @@ export default class PhotosController {
       });
     } catch (error) {
       response.badRequest(error);
+    }
+  }
+
+  public async findByEvent({ response, params }) {
+    try {
+      const event = await Event.findOrFail(params.id);
+      const photos = await Photo.findByOrFail("event_id", event.id);
+      return photos;
+    } catch (error) {
+      response.badRequest({
+        message: "Falha ao listar itens",
+        error: error.message,
+      });
+    }
+  }
+
+  public async delete({ response, params }) {
+    try {
+      const photo = await Photo.findOrFail(params.id);
+      await photo.delete();
+      return "Deletado com sucesso";
+    } catch (error) {
+      response.badRequest({
+        message: "Falha ao deletar item",
+        error: error.message,
+      });
     }
   }
 
