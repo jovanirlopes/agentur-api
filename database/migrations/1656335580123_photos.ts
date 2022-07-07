@@ -7,7 +7,7 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments("id");
       table.string("fileName");
-      table.integer("event_id").unsigned().references("events.id");
+      table.integer("event_id").unsigned().references("events.id").onDelete('CASCADE');
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
