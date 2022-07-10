@@ -1,6 +1,7 @@
 // import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 import Event from "App/Models/Event";
+import Photo from "App/Models/Photo";
 
 export default class EventsController {
   public page: number;
@@ -67,8 +68,12 @@ export default class EventsController {
   public async delete({ response, params }) {
     try {
       const event = await Event.findOrFail(params.id);
-      event.delete();
-      return;
+      const photos = await Photo.query().where('event_id', event.id)
+      for (let photo of photos) {
+        await photo.delete()
+      }
+      await event.delete();
+      return event.$isDeleted
     } catch (error) {
       return response.badRequest({
         message: "Falha ao deletare vento",
