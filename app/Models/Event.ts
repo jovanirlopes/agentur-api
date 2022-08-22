@@ -37,7 +37,7 @@ export default class Event extends BaseModel {
   public category: BelongsTo<typeof Category>;
 
   @column()
-  public statusEventId: number;
+  public statusId: number;
 
   @belongsTo(() => StatusEvent)
   public status: BelongsTo<typeof StatusEvent>;
